@@ -23,13 +23,14 @@ def check_root_full():
     return check_disk_full(disk="/", min_gb=2, min_percent=10)
 
 def main():
-    if check_reboot():
-        print("Pending reboot.")
-        sys.exit(1)
-    if check_root_full():
-        print("Root Partition disk space critically low.")
-        sys.exit(1)
-
+    checks = [
+        (check_reboot, "Pending reboot."),
+        (check_root_full, "Root Partition disk space critically low.")
+    ]
+    for check, msg in checks:
+        if check():
+            print(msg)
+            sys.exit(1)
     print("Everything is ok")
     sys.exit(0)
 
